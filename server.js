@@ -17,7 +17,7 @@ var User  = require("./user");
 var key = "thekey%@123";
 
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://robinjain12:robinjain12@@ds159631.mlab.com:59631/chat", function(err)
+mongoose.connect("mongodb://robinjain12:robinjain12@ds159631.mlab.com:59631/chat", function(err)
   {
     if(err)
     {
