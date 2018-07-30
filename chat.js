@@ -23,7 +23,7 @@ var message = document.getElementById("message"),
     droom = document.getElementById("droom");
     chatwin = document.getElementById("chat-window");
     mariochat = document.getElementById("mario-chat"),
-    read = document.getElementById("read"),
+    read = document.getElementById("read");
 
 
 
