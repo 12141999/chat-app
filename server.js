@@ -14,7 +14,7 @@ var crypto = require("crypto");
 var Message  = require("./message");
 var Room  = require("./room");
 var User  = require("./user");
-var key = "thekey%%123";
+var key = "thekey%@123";
 
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://robinjain12:robinjain12@@ds159631.mlab.com:59631/chat", function(err)
@@ -210,7 +210,7 @@ app.get("/", isLoggedIn ,function(req,res){
   });
 
 var port = process.env.PORT || 5000 ;
-
+  
 var server = app.listen(port , function(){
   console.log("server is started");
 });
