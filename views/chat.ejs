@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>chat app</title>
+	<script src="/socket.io/socket.io.js"></script>
+	<!-- <script src="socket.io.js.map"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+
+    <!-- boostrap cdn -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+    <!-- font -->
+    <style>
+    @import url('https://fonts.googleapis.com/css?family=Nunito');
+    </style> 
+
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="text-center">
+				<h1>start a new chat</h1><br>
+				<!-- <form action="/roominput" method="POST"> -->
+				<div class="form-group">
+                <label for="exampleInputEmail1"></label>
+                <input type="text" class="form-control" id="room" placeholder="enter secret code">
+                </div><br><br>
+                <input type="text" name="read" id="read" value="true" style="display: none;"><br><br>
+				<button type="submit" class="btn btn-primary" id="rjsend">enter in room</button>	
+				<!-- </form> -->
+				    <button id="clear" class="btn btn-danger" style="display: none;">clear chat</button><br><br>
+
+
+
+                    <div id="mario-chat" style="display: none;">
+                    	<h2>chat-system</h2>
+                    <button id="show" name="show" placeholder="click me for see messages" style="display: none;"></button>
+                    <div id="chat-window" style="display: none;">
+				     <div id="output"></div>
+					<div id="feedback"></div>
+					
+				<!--    <div class="file-field input-field">
+      <div class="btn">
+        <span>File</span>
+        <input id="image" name="myImage" type="file">
+      </div>
+      <div class="file-path-wrapper">
+        <input id="file" class="file-path validate" type="text"><br>
+        
+         </div>
+			    
+				    </div> -->
+				    </div>
+				    <input id="handle" type="text" name="username" placeholder="enter your name" ><br>
+				    <input id="message" type="text" name="Message" placeholder="enter your message" ><br>
+				    <button id="send" type="submit" class="btn">send</button>	
+				    
+			</div> 
+		</div>
+	</div>
+</div>
+
+<script src="./chat.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.js" integrity="sha256-fNXJFIlca05BIO2Y5zh1xrShK3ME+/lYZ0j+ChxX2DA="crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+</body>
+</html>

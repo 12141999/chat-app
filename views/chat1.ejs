@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>chat app</title>
+	<script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+
+    <!-- boostrap cdn -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="./style.css">
+
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+		<div class=" col-md-6 offset md-3 col-sm-12">
+			<div class="text-center">
+				<h1>start a new chat</h1><button id="clear" class="btn btn-danger">clear chat</button><br>
+				<input id="room" type="text" name="room" placeholder="enter your room" value="<%=data.room%>"><br>
+				<!-- <button id="rsend" type="submit" class="btn btn-primary">enter in room</button> -->
+					<div id="output"></div>
+					<div id="feedback"></div>
+						<input" type="text" name="username" placeholder="enter your name"><br>
+				        <input  type="text" name="message" placeholder="enter your message"><br>
+				        <button type="submit" class="btn btn-primary">send</button><br><br><br>
+				        <button type="submit" class="btn btn-primary">cancle room</button>
+			</div> 
+		</div>
+	</div>
+</div>
+
+<script src="./chat.js"></script>
+</body>
+</html>
