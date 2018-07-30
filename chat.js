@@ -24,7 +24,6 @@ var message = document.getElementById("message"),
     chatwin = document.getElementById("chat-window");
     mariochat = document.getElementById("mario-chat"),
     read = document.getElementById("read"),
-    file = document.getElementById("file");
 
 
 
@@ -50,7 +49,6 @@ rjsend.addEventListener("click" , function(){
   btn.style.display = 'block';
   chatwin.style.display = 'block';
   mariochat.style.display = 'block';
-  file.style.display = 'block';
 });
 
 
