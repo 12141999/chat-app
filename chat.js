@@ -1,6 +1,6 @@
 //make connections
 
-var socket = io.connect("https://robinchats.herokuapp.com");
+var socket = io.connect("https://robinchats.herokuapp.com/apps/robinchats/");
 
 
 
