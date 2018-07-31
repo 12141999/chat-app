@@ -14,20 +14,9 @@ var crypto = require("crypto");
 var Message  = require("./message");
 var Room  = require("./room");
 var User  = require("./user");
-var key = "thekey%@123";
+var key = "thekey%%123";
 
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://robinjain12:robinjain12@ds159631.mlab.com:59631/chat", function(err)
-  {
-    if(err)
-    {
-      console.log(err);
-    }
-    else
-   {
-      console.log("database has been connected!");
-         }
-  });
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine" , "ejs");
@@ -46,7 +35,7 @@ app.use(require("express-session")({
 /*app.use(sessionMiddleware);
 
 socket().use(function(socket, next){
-	sessionMiddleware(socket.request, socket.request.res, next);
+  sessionMiddleware(socket.request, socket.request.res, next);
 });*/
 
 app.use(passport.initialize());
@@ -56,8 +45,139 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(function(req,res,next){
+   res.locals.currentUser = req.user;
+   next();
+});
 
 
+
+
+mongoose.Promise = global.Promise;
+mongoose.connect("mongodb://localhost/chat", function(err , db)
+  {
+    if(err)
+    {
+      console.log(err);
+    }
+    
+      console.log("database has been connected!");
+
+
+var io = socket(server);
+//var users = {};
+io.on("connection" , function(socket){
+  console.log("made a connection of server to client",socket.id );
+ 
+ let Message = db.collection('messages');
+
+sendStatus = function(s){
+  socket.emit(s);
+}
+
+
+
+socket.on("find" , function(data){
+  
+Message.find({room : data.room}).limit(100).sort({_id:1}).toArray(function(err,res){
+  if(err)
+  {
+    console.log(err);
+  }else{
+    console.log("********************");
+    console.log(res);
+    console.log("********************");
+    io.sockets.to(data.room).emit("chat" , res);
+  }
+
+});
+
+});
+/*  console.log(socket.request.user);
+  if(socket.request.isAuthenticated()){
+    console.log(socket.request.user);
+  }
+  else{
+    console.log("not logged in");
+  }*/
+
+
+ socket.on("enter" , function(data){
+  console.log(data);
+   console.log("user is enter in the room");
+  
+   Room.create(data ,function(err , data){
+       if(err){
+        console.log("something went wrong");
+        console.log(err);
+       }else{
+        console.log("room is insert succesfully");
+        console.log(data);
+        socket.join(data.room);
+      }
+    }); 
+   
+});
+
+
+socket.on("chat" , function(data){
+  console.log("enter chat event");
+  console.log("===================");
+  console.log(data);
+  console.log("===================");
+   
+ io.sockets.to(data.room).emit("outputs" , data);
+});
+
+socket.on("insert" , function(data){
+  //var encmsg = crypto.createCipher("aes-256-ctr" , key).update(data.message , "utf-8" , "hex" );
+  var handle = data.handle;
+  var message = data.message;
+  var room = data.room;
+   /*if(name=" " || encmsg=" ")
+   {
+    sendStatus("please enter a name and status");
+   }else{*/
+
+  var data = { handle : handle , message : message , room : room  };
+  Message.insert(data , function(err , result){
+   if(err)
+   {
+    console.log(err);
+   }else{
+     console.log("inserting is succesfully");
+   }
+ });
+/*}*/
+});
+
+socket.on("typing" , function(data){
+   socket.broadcast.to(data.room).emit("typing" , data); 
+});
+
+//clear chat
+socket.on("clear" , function(){
+  Message.remove({} , function(err){
+     if(err){
+      console.log(err)
+     }else{
+      console.log("chat is deleted");
+      socket.emit("cleared");
+     }
+  });
+});
+
+
+});
+
+
+
+
+  });
+
+var server = app.listen("7089" , function(){
+  console.log("server is started");
+});
 
 // user signup 
 app.post("/signup" , function(req,res){
@@ -78,14 +198,14 @@ User.register(new User ({username : username , mobileno : mobileno , email : ema
 
 
 app.post("/login" , passport.authenticate("local",{
-   successRedirect : "/" , 
+   successRedirect : "/chat" , 
    failureRedirect : "/login"
 }), function(req,res){
 });
 
 app.get("/logout", function(req,res){
   req.logout();
-  res.redirect("/login");
+  res.redirect("/");
 });
 
 
@@ -113,85 +233,6 @@ var upload = multer({
 
 
 //socket setup
-var io = socket(server);
-//var users = {};
-io.on("connection" , function(socket){
-  console.log("made a connection of server to client",socket.id	);
-/*  console.log(socket.request.user);
-  if(socket.request.isAuthenticated()){
-  	console.log(socket.request.user);
-  }
-  else{
-  	console.log("not logged in");
-  }*/
-
-
- socket.on("enter" , function(data){
- 	console.log(data);
-   console.log("user is enter in the room");
-   Room.create(data ,function(err , data){
-       if(err){
-       	console.log("something went wrong");
-       	console.log(err);
-       }else{
-       	console.log("room is insert succesfully");
-       	console.log(data);
-       	socket.join(data.room);
-      }
-    }); 
-});
-
-
-socket.on("chat" , function(data){
-  console.log("enter chat event");
-  console.log("===================");
-  console.log(data);
-  console.log("===================");
-/*     upload(req,res,(err) => {
-   if(err)
-   {
-    console.log(err);
-   }
-   else{
-    console.log(req.file);
-     }
-   });*/
- io.sockets.to(data.room).emit("chat" , data);
-});
-
-socket.on("insert" , function(data){
-  var encmsg = crypto.createCipher("aes-256-ctr" , key).update(data.message , "utf-8" , "hex" );
-  var name = data.handle;
-  var file = data.file;
-  var data = { message : encmsg , handle : name , file : file};
-  Message.create(data , function(err , result){
-   if(err)
-   {
-   	console.log(err);
-   }else{
-   	 console.log("inserting is succesfully");
-   }
- });
-});
-
-socket.on("typing" , function(data){
-   socket.broadcast.to(data.room).emit("typing" , data); 
-});
-
-//clear chat
-socket.on("clear" , function(){
-  Message.remove({} , function(err){
-     if(err){
-     	console.log(err)
-     }else{
-     	console.log("chat is deleted");
-     	socket.emit("cleared");
-     }
-  });
-});
-
-
-});
 
 
 
@@ -205,12 +246,10 @@ app.get("/login", function(req,res){
 });
 
 
-app.get("/", isLoggedIn ,function(req,res){
+app.get("/chat", isLoggedIn ,function(req,res){
      res.render("chat.ejs");
   });
 
-var port = process.env.PORT || 5000 ;
-  
-var server = app.listen(port , function(){
-  console.log("server is started");
+app.get("/" , function(req,res){
+  res.render("home.ejs");
 });

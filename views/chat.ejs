@@ -12,6 +12,7 @@
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
+     <link rel="stylesheet" type="text/css" href="./css/style2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
 
     <!-- font -->
@@ -22,11 +23,12 @@
 </head>
 <body>
 
+<%include header%>
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="text-center">
-				<h1>start a new chat</h1><br>
+				<h1><center>welcome in mario chat</center></h1><br>
 				<!-- <form action="/roominput" method="POST"> -->
 				<div class="form-group">
                 <label for="exampleInputEmail1"></label>
@@ -41,6 +43,7 @@
 
                     <div id="mario-chat" style="display: none;">
                     	<h2>chat-system</h2>
+                    	<div id="status"></div>
                     <button id="show" name="show" placeholder="click me for see messages" style="display: none;"></button>
                     <div id="chat-window" style="display: none;">
 				     <div id="output"></div>
@@ -72,3 +75,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
 </body>
 </html>
+<%include footer%>

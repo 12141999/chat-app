@@ -1,7 +1,5 @@
 //make connections
 
-var socket = io.connect("http://robinjain12:robinjain12@ds159631.mlab.com:59631:5000");
-
 
 
 
@@ -23,23 +21,36 @@ var message = document.getElementById("message"),
     droom = document.getElementById("droom");
     chatwin = document.getElementById("chat-window");
     mariochat = document.getElementById("mario-chat"),
-    read = document.getElementById("read");
+    status = document.getElementById("status");
 
 
-
+var statusDefault = status.textContent;
+var setStatus = function(s){
+  status.textContent = s;
+  if(s !== statusDefault)
+  {
+    var delay = setTimeout(function(){
+      setStatus(statusDefault);
+    },4000);
+  }
+}
 //encyption
 //var encmsg = crypto.createCipher("aes-256-ctr" , key).update(message.value , "utf-8" , "hex");
 
 
 
+var socket = io.connect("http://localhost:7089");
+if(socket != undefined)
+{
+  console.log("connected to socket...");
+}
 
 
 //room criteria
 
 rjsend.addEventListener("click" , function(){
   socket.emit("enter" , {
-    room : room.value,
-    read : read.value
+    room : room.value
   });
   rjsend.style.display = "none";
   room.style.display = "none";
@@ -65,15 +76,21 @@ btn.addEventListener("click",function(){
   	room : room.value,
     message : message.value,
     handle : handle.value
-   /* file : file.value*/
+  });
+});
+
+btn.addEventListener("click" , function(){
+  socket.emit("find", {
+    room : room.value,
+    handle : handle.value
   });
 });
 
 btn.addEventListener("click" , function(){
   socket.emit("insert" , {
     message : message.value,
-    handle : handle.value
-    //file : file.value
+    handle : handle.value,
+    room : room.value
   });
 });
 
@@ -85,13 +102,13 @@ message.addEventListener("keypress" , function(){
 });
 //output
 
-socket.on("chat" ,function(data){
+socket.on("outputs" ,function(data){
   console.log("hurrrrrrrrrrrrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeeee");
 	console.log(data);
   // var decmsg = createDecipher(aes-256-ctr , "key").update(data.message , "hex" , "utf-8");
   //console.log(decmsg);
 feedback.innerHTML = "";
-output.innerHTML += "<p><strong>" + data.handle +  " : </strong>"  +data.message +"</p>";
+output.innerHTML = "<p><strong>" + data.handle +  " : </strong>"  +data.message +"</p>";
 //output.innerHTML += "<img src=" + file +  ">"
 //output.innerHTML += "<p> send </p>"
 });
@@ -100,8 +117,27 @@ socket.on("typing" , function(data){
  feedback.innerHTML = "<p><strong>" + data.handle + "</strong> is typing....</p>"
 });
 
-
-
+/*
+socket.on("privious" , function(res){
+  console.log("yeahhhhhhhhhhhhhhhhhhhhhhhh");
+  console.log(res);
+  console.log("yeahhhhhhhhhhhhhhhhhhhhhhhh");
+ output.innerHTML += "<p><strong>" + res.handle + " : </strong" + res.message + '</p>';
+});
+*/
+ 
+socket.on("chat" , function(data){
+    if(data.length){
+      for(var x=0 ; x < data.length; x++)
+      {
+        var chatwin = document.createElement("div");
+        chatwin.setAttribute("class" , "chat - message");
+        chatwin.innerHTML = "<p><strong>" + data[x].handle + "</strong> :"  + data[x].message + "</p>";
+        output.appendChild(chatwin);
+        output.insertBefore(chatwin , output.firstChild);
+      }
+    }
+});
 
 //clear chat
 clear.addEventListener("click" , function(){
