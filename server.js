@@ -134,21 +134,20 @@ socket.on("insert" , function(data){
   var handle = data.handle;
   var message = data.message;
   var room = data.room;
-   /*if(name=" " || encmsg=" ")
-   {
-    sendStatus("please enter a name and status");
-   }else{*/
-
   var data = { handle : handle , message : message , room : room  };
-  Message.insert(data , function(err , result){
-   if(err)
-   {
-    console.log(err);
-   }else{
+    Message.insert(data , function(err , result){
+    if(err)
+    {
+     console.log(err);
+    }else{
      console.log("inserting is succesfully");
+     sendStatus({
+         message : "message sent" ,
+         clear : true
+     });  
    }
  });
-/*}*/
+  /*}*/
 });
 
 socket.on("typing" , function(data){
@@ -215,21 +214,6 @@ function isLoggedIn(req,res,next){
   }
   res.redirect("/login");
 }
-
-/*
-var storage = multer.diskStorage({
-  destination : "./views/uploads/",
-  filename : function(req,file,cb){
-    cb(null , file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-  }
-});
-
-//upload
-
-var upload = multer({
-  storage : storage,
-  limits : {fileSize : 1000000000000000}
-}).single("myImage");*/
 
 
 //socket setup

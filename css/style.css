@@ -28,7 +28,6 @@ text-align: center;
 }
 
 #chat-window{
-    /*height: 400px;*/
     overflow: auto;
     background: #f9f9f9;
 }
